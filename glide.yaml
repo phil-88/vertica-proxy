@@ -1,4 +1,4 @@
-package: github.com/crunchydata/crunchy-proxy
+package: github.com/phil-88/vertica-proxy
 import:
 - package: github.com/golang/protobuf
   subpackages:
