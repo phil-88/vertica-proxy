@@ -1,0 +1,96 @@
+server:
+  proxy:
+    hostport: :5433
+
+nodes:
+  master-node1:
+    hostport: vertica-node1:5433
+    role: master
+    metadata: {}
+  master-node2:
+    hostport: vertica-node2:5433
+    role: master
+    metadata: {}
+  master-node3:
+    hostport: vertica-node3:5433
+    role: master
+    metadata: {}
+
+  pg-meta1:
+    hostport: postgresql-node:5432
+    role: metadata
+    metadata: {}
+  pg-meta2:
+    hostport: postgresql-node:5432
+    role: metadata
+    metadata: {}
+  pg-meta3:
+    hostport: postgresql-node:5432
+    role: metadata
+    metadata: {}
+
+
+credentials:
+  master:
+    username: crunchy_proxy
+    database: DWH
+    password: dummy
+    protocol: 0x030008
+    options:
+    ssl:
+      enable: false
+      sslmode: disable
+  replica:
+    username: crunchy_proxy
+    database: DWH
+    password: dummy
+    protocol: 0x030008
+    options:
+    ssl:
+      enable: false
+      sslmode: disable
+  metadata:
+    username: crunchy_proxy
+    database: dwh_metadata
+    password: dummy
+    protocol: 0x030000
+    options:
+    ssl:
+      enable: false
+      sslmode: disable
+
+
+clients: any
+
+default-backend: master
+pool:
+  capacity: 1
+  enable: false
+  forceRouting: true
+
+pick-session-level: self
+connection-ttl: 90000
+
+routes:
+  forbidden1:
+    query: export_[^_()\s]+\s*\(\s*'[^']*'\s*,\s*'[^.']*'\s*\)
+    target: abort
+  forbidden2:
+    query: export_[^_()\s]+\s*\(\s*'[^']*'\s*\)
+    target: abort
+  forbidden3:
+    query: export_catalog
+    target: abort
+  forbidden4:
+    query: copy_table\s*\(
+    target: abort
+  forbidden5:
+    query: insert\s+.*values\s*\(
+    target: abort
+  redirect1:
+    query: \s+(v_catalog.all_tables|v_catalog.types|v_catalog.odbc_columns|v_internal.vs_schemata|v_catalog.primary_keys|v_catalog.foreign_keys|v_catalog.tables|v_catalog.views|v_catalog.comments)[;\s]
+    target: metadata
+  redirect2:
+    query: select\s+[^\s]*\s+as\s+catalog_name
+    target: metadata
+

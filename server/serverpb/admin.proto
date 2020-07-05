@@ -1,0 +1,108 @@
+/*
+Copyright 2017 Crunchy Data Solutions, Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax="proto3";
+
+package crunchyproxy.server.serverpb;
+option go_package = "serverpb";
+
+import "google/api/annotations.proto";
+
+// NodeRequest requests a list of nodes.
+message NodeRequest {
+}
+
+// NodeResponse contains a list of nodes.
+message NodeResponse {
+	map<string, string> nodes = 1;
+}
+
+// PoolRequest requests a list of pools.
+message PoolRequest {
+}
+
+// PoolResponse contains a list of pools.
+message PoolResponse {
+	repeated string pools = 1;
+}
+
+message HealthRequest {
+
+}
+
+message HealthResponse {
+	map<string,bool> health = 1;
+}
+
+message StatisticsRequest {
+}
+
+message StatisticsResponse {
+	map<string,int32> queries = 1;
+}
+
+// ShutdownRequest requests the server to shutdown.
+message ShutdownRequest {
+}
+
+// ShutdownResponse contains the the state of the proxy.
+message ShutdownResponse {
+	bool success = 1;
+}
+
+message VersionRequest {
+}
+
+message VersionResponse {
+    string version = 1;
+}
+
+service Admin {
+	rpc Nodes(NodeRequest) returns (NodeResponse) {
+		option (google.api.http) = {
+			get: "/_admin/nodes"
+		};
+	}
+
+	rpc Pools(PoolRequest) returns (PoolResponse) {
+		option (google.api.http) = {
+			get: "/_admin/pools"
+		};
+	}
+
+	rpc Health(HealthRequest) returns (HealthResponse) {
+		option (google.api.http) = {
+			get: "/_admin/health"
+		};
+	}
+
+	rpc Statistics(StatisticsRequest) returns (StatisticsResponse) {
+		option (google.api.http) = {
+			get: "/_admin/stats"
+		};
+	}
+
+	rpc Shutdown(ShutdownRequest) returns (stream ShutdownResponse) {
+		option (google.api.http) = {
+			post: "/_admin/shutdown"
+			body: "*"
+		};
+	}
+
+    rpc Version(VersionRequest) returns (VersionResponse) {
+        option (google.api.http) = {
+            get: "/_admin/version"
+        };
+    }
+}
