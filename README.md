@@ -15,9 +15,20 @@ Vertica support includes:
  * copy from local
  * pipelined queries
  
- Vertica to postgresql protocol fallback suppors only simple query and 2-phase extended query. 
- Thats why metadata postgres routing does not work for latest datagrip versions (it uses 3-phase extended query for metadata fetching).
+Vertica to postgresql protocol fallback suppors only simple query and 2-phase extended query. 
+Thats why metadata postgres routing does not work for latest datagrip versions (it uses 3-phase extended query for metadata fetching).
  
- Copy from stdin is not supported, so vertica_python copy does not work as well.
+Copy from stdin is not supported, so vertica_python copy does not work as well.
  
- 
+## How-to
+Having golang installed and crunchy-proxy pulled into ~/src/go/src/github.com/crunchydata/crunchy-proxy
+``` 
+export GOPATH=~/src/go/
+export GOROOT=/usr/lib/go-1.9/
+export PATH=$GOROOT/bin:$PATH
+
+make build
+
+./build/crunchy-proxy start --config ./build/config.yaml --log-level=debug
+
+```
