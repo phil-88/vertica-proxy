@@ -21,7 +21,7 @@ Thats why metadata postgres routing does not work for latest datagrip versions (
 Copy from stdin is not supported, so vertica_python copy does not work as well.
  
 ## How-to
-Having golang installed and crunchy-proxy pulled into ~/src/go/src/github.com/crunchydata/crunchy-proxy
+Having golang installed and vertica-proxy pulled into ~/src/go/src/github.com/phil-88/vertica-proxy
 ``` 
 export GOPATH=~/src/go/
 export GOROOT=/usr/lib/go-1.9/
@@ -30,5 +30,4 @@ export PATH=$GOROOT/bin:$PATH
 make build
 
 ./build/crunchy-proxy start --config ./build/config.yaml --log-level=debug
-
 ```
